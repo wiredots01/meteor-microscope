@@ -14,3 +14,7 @@ if(Posts.find().count() === 0){
 		url: 'http://meteor.com'
 	});
 }
+
+// Meteor.startup(function() { Tracker.autorun(function() {
+// 	console.log('There are ' + Posts.find().count() + ' posts'); });
+// });
