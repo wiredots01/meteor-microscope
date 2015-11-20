@@ -6,9 +6,15 @@ Template.postEdit.events({
 			url: $(e.target).find('[name=url]').val(), 
 			title: $(e.target).find('[name=title]').val()
 		}
+
+		var errors = validatePost(postProperties); 
+		if (errors.title || errors.url)
+			return Session.set('postEditErrors', errors);
+
 		Posts.update(currentPostId, {$set: postProperties}, function(error) { 
 			if (error) {
-				alert(error.reason); } else {
+				throwError(error.reason);
+			} else {
 	        Router.go('postPage', {_id: currentPostId});
 	      }
 		});
@@ -22,4 +28,17 @@ Template.postEdit.events({
 			Router.go('postsList');
 		} 
 	}
+});
+
+Template.postEdit.onCreated(function() { 
+	Session.set('postEditErrors', {});
+});
+
+Template.postEdit.helpers({ 
+	errorMessage: function(field) {
+		return Session.get('postEditErrors')[field]; 
+	},
+	errorClass: function (field) {
+		return !!Session.get('postEditErrors')[field] ? 'has-error' : '';
+	} 
 });
